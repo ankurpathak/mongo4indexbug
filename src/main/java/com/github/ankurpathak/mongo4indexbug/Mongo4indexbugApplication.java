@@ -1,19 +1,17 @@
 package com.github.ankurpathak.mongo4indexbug;
 
-import com.mongodb.bulk.BulkWriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.core.BulkOperations;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 @SpringBootApplication
 public class Mongo4indexbugApplication {
@@ -22,6 +20,10 @@ public class Mongo4indexbugApplication {
         SpringApplication.run(Mongo4indexbugApplication.class, args);
     }
 
+    @Bean
+    public MongoTransactionManager transactionManager(MongoDbFactory dbFactory) {
+        return new MongoTransactionManager(dbFactory);
+    }
 }
 
 @Component
@@ -31,31 +33,18 @@ class TestCLR implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        mongoTemplate.dropCollection("names");
-        BulkOperations ops = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Name.class);
-        Name nameTemp = new Name("Rama");
-      //  List<Name> names = Arrays.asList(nameTemp, nameTemp, nameTemp);
-        List<Name> names = Arrays.asList(nameTemp);
-        ops.insert(names);
-
-        try{
-            BulkWriteResult hello = ops.execute();
-
-            System.out.println();
-        }catch (Exception ex){
-            System.out.println();
-        }
-
     }
 }
 
 
 @Document(collection = "names")
-class Name {
+class User {
     private String id;
 
     @Indexed(name = "nameIdx", unique = true, sparse = true)
     private String name;
+
+    private Integer age;
 
     public String getId() {
         return id;
@@ -73,15 +62,24 @@ class Name {
         this.name = name;
     }
 
-    public Name(String name) {
+    public User(String name, Integer age) {
         this.name = name;
+        this.age = age;
     }
 
-    public Name() {
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public User() {
     }
 }
 
 
-interface INameRepository extends MongoRepository<Name, String>{
+interface IUserRepository extends MongoRepository<User, String>{
 
 }

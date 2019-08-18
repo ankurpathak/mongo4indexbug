@@ -9,7 +9,6 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -22,16 +21,16 @@ public class Mongo4indexbugApplicationTests {
     public static MongoDbContainer mongo = new MongoDbContainer();
 
     @Autowired
-    private INameRepository nameRepository;
+    private IUserRepository nameRepository;
 
     @Test(expected = DuplicateKeyException.class)
     public void contextLoads() {
-        Name name = new Name("Ankur");
-        nameRepository.save(name);
-        name.setId(null);
-        nameRepository.save(name);
-        name.setId(null);
-        nameRepository.save(name);
+        User user = new User("Ankur", 13);
+        nameRepository.save(user);
+        user.setId(null);
+        nameRepository.save(user);
+        user.setId(null);
+        nameRepository.save(user);
     }
 
 

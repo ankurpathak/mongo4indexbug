@@ -11,7 +11,6 @@
     <groupId>com.github.ankurpathak</groupId>
     <artifactId>mongo4indexbug</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mongo4indexbug</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -36,7 +35,6 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${testcontainer.version}</version>
-            <scope>test</scope>
         </dependency>
         <!-- TestContainer -->
     </dependencies>
